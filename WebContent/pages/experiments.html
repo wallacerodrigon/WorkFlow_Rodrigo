@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<title>Universidade de Bras&iacute;lia</title>
+	<!--[if lt IE 9]>
+	   <link rel="stylesheet" type="text/css" href="_css/style_ie.css"/>
+	   <script>
+	      document.createElement('header');
+	      document.createElement('nav');
+	      document.createElement('section');
+	      document.createElement('article');
+	      document.createElement('aside');
+	      document.createElement('footer');
+	   </script>
+	<![endif]-->	
+	
+	<link rel="stylesheet" href="../_css/common_style.css"/>	
+	<link rel="stylesheet" href="../_css/project.css"/>	
+
+	<!--jquery-->	
+    <script src="../jquery/jquery.js" type="text/javascript"></script>
+    <script src="../jquery/ui/i18n/ui.datepicker-pt-BR.js" type="text/javascript"></script>    
+    <script src="../jquery/jquery.impromptu.2.7.js" type="text/javascript"></script>
+    <script src="../_js/project.js"></script>
+    <script src="../_js/activity.js"></script>    	
+		
+</head>
+<body>
+
+<div id="formCadExperimento" title="">
+	<fieldset>
+		<legend>Manuten&ccedil;&atilde;o de Experimentos</legend>
+			<form id="frmManter">
+				<div class="rotulo">Nome</div>
+				<input type="text" id="txtNome" name="nome" maxlength="50" size="100">				
+				
+				<div class="rotulo">Descri&ccedil;&atilde;o</div><input type="text" id="txtDescricao" name="descricao" maxlength="50" size="100">
+				<div class="rotulo">Coordenador</div><input type="text" id="txtCoordenador" name="coordenador" maxlength="50" size="100">
+										
+				<div class="rotulo">
+					<div>Data in&iacute;cio</div><input type="text" id="txtInicio" name="dataHoraInicio">				
+				    <div>Data fim</div><input type="text" id="txtFim" name="dataHoraFim" >
+				</div>				
+									
+				<div class="rotulo">
+					<div>Observa&ccedil;&otilde;es</div><textarea id="txtObservacao" name="observacao" rows="4" cols="71"></textarea>
+				</div>
+				
+				</div>
+				<input type="hidden" name="acao" value="salvar"/>
+				<input type="hidden" name="idProjeto" id="idProjeto" value="0"/>
+			</form>
+	</fieldset>	
+	
+</div>
+
+
+</body>
+</html>

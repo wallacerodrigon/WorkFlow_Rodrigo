@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<title>Universidade de Bras&iacute;lia</title>
+	<!--[if lt IE 9]>
+	   <link rel="stylesheet" type="text/css" href="_css/style_ie.css"/>
+	   <script>
+	      document.createElement('header');
+	      document.createElement('nav');
+	      document.createElement('section');
+	      document.createElement('article');
+	      document.createElement('aside');
+	      document.createElement('footer');
+	   </script>
+	<![endif]-->	
+		
+	<link rel="stylesheet" href="../_css/common_style.css"/>	
+	<link rel="stylesheet" href="../_css/project.css"/>	
+
+	<!--jquery-->	
+    <script src="../jquery/jquery.js" type="text/javascript"></script>
+    <script src="../jquery/ui/i18n/ui.datepicker-pt-BR.js" type="text/javascript"></script>    
+    <script src="../jquery/jquery.impromptu.2.7.js" type="text/javascript"></script>
+    <script src="../_js/project.js"></script>
+    <script src="../_js/activity.js"></script>    
+
+    
+</head>
+<body>
+<div id="formCadAtividade" title="">
+	<form id="frmManterAtividade">
+	<fieldset>
+			<legend>Manuten&ccedil;&atilde;o de atividades</legend>
+			<div  class="rotulo">Programa</div>
+			<input type=text id="txtPrograma" name="nomePrograma" maxlength="50" style="width:500px">
+			
+			<br>
+			<div class="rotulo">Vers&atilde;o</div>
+			<div class="rotulo">Fun&ccedil;&atilde;o</div>
+			<br>
+			
+			<input type="text" id="txtVersao" name="versaoPrograma" maxlength="50" size="22">
+			<input type="text" id="txtFuncao" name="funcao" maxlength="50" size="71">
+			<br>
+			
+			<div class="rotulo">Data/Hora in&iacute;cio</div>
+			<br>				
+			<input type="text" id="txtInicioAtividade" name="dataInicio" maxlength="50" size="20">
+			<input type="text" id="txtHoraInicioAtividade" name="horaInicio" maxlength="50" size="10">
+			<br>				
+
+			<div class="rotulo">Data/Hora fim</div>
+			<br>				
+			
+			<input type="text" id="txtFimAtividade" name="dataFim" maxlength="50" size="20">
+			<input type="text" id="txtHoraFimAtividade" name="horaFim" maxlength="50" size="10">
+			<br>
+			
+			<div class="rotulo">Linha de comando</div>
+			<textarea id="txtComando" name="linhaComando" rows="5" maxlength="100" style="width: 500px"></textarea>
+			<br>
+			
+			<div id="nomeArquivoSelecionado"></div>
+			<br>
+							
+			<input type="hidden" id="txtNomeArquivo" name="nomeArquivo"/>
+			<input type="hidden" name="acao" value="salvar"/>
+			<input type="hidden" name="idAtividade" id="idAtividade"/>
+			<input type="hidden" id="idProjetoDaAtividade" name="idProjetoDaAtividade"/>
+	</fieldset>
+	</form>
+	<iframe src="upload.html" id="frameUpload"></iframe>
+</div>
+				
+
+<div id="users-contain" class="ui-widget" style="display:none">
+	<div id="telaResultadoComando">
+		<textarea id="txtResultadoComando" style="width:450px; height: 380px" disabled></textarea>
+	</div>
+</div>
+
+<div id="users-contain" class="ui-widget" style="display:none">
+	<div id="divProcessando">
+		<img src="../_img/loading_50_50.gif" id="imgProcessando" style="margin-left: 200px"/>
+		<h1>Aguarde enquanto o comando est&aacute; sendo executado!!!</h1>
+	</div>
+</div>
+
+
+
+
+</body>
+</html>

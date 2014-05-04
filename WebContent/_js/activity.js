@@ -6,7 +6,7 @@ jQuery(document).ready(function(){
     $("#txtHoraInicioAtividade").mask("99:99");    
     $("#txtHoraFimAtividade").mask("99:99");
 	
-	$("#formCadastroAtividade").dialog({
+/*	$("#formCadastroAtividade").dialog({
     	autoOpen: false,
     	height: 550,
 		width: 550,
@@ -74,10 +74,43 @@ jQuery(document).ready(function(){
     	height: 200,
 		width: 500,
     	modal: true,
-	});		
+	});	*/	
 	
 });
 
+function salvarAtividade(){
+	if (! isDadosValidosDaAtividade()){
+		$.prompt("Informe arquivo do programa, data e horas inicio e fim.");
+		return;
+	}
+	
+	//validar data e hora
+	if (!validarDataInicioFim($('#txtInicioAtividade').val() + ' ' +$("#txtHoraInicioAtividade").val(), $('#txtFimAtividade').val() + ' ' +$("#txtHoraFimAtividade").val())){
+		$.prompt("Data/hora iniciais maior que finais!");
+		return;
+	}	
+	
+	mostrarNomeArquivo();
+	
+	$.ajax({
+	    url:'../activity.do?acao=salvar',
+	    dataType:'html',
+	    data:$('#frmManterAtividade').serialize(),
+	    type:'POST',
+	    success: function( data ){
+  	    	if (data == "sucesso"){
+	    		$.prompt("Cadastro salvo com sucesso!");
+	    		window.location.reload(true);
+	    	} else {
+	    		$.prompt("Erro no cadastro. Motivo:" + data);
+	    	}
+	    },	
+	    error: function( xhr, er ){
+	        $.prompt('Os dados n&atilde;o for&atilde;o salvos. Causa:' + data);
+	    }
+	});	
+	
+}
 
 function executarComando(pLinhaComando, pNomeArquivo){
 	$.ajax({
@@ -98,12 +131,6 @@ function executarComando(pLinhaComando, pNomeArquivo){
 	});		
 }
 
-
-function exibirResultadoNaTela(dadosAExibir){
-	$('#telaResultadoComando').dialog('open');	
-    $('#telaResultadoComando').dialog('option', 'title', 'Saida do resultado do comando');
-    $('#telaResultadoComando #txtResultadoComando').val(dadosAExibir);
-}
 
 function isDadosValidosDaAtividade(){
 	
@@ -133,7 +160,7 @@ function excluirAtividade(codAtividade)
 				success: function( data, textStatus ){
 					if( data == 'sucesso' ){
 						$.prompt( 'Registro excluido com sucesso!'); 
-						listarAtividades($("#idProjetoDaAtividade").val());						
+						window.location.reload(true);						
 					}
 					else
 					{
@@ -149,14 +176,7 @@ function excluirAtividade(codAtividade)
 	$.prompt( 'Deseja realmente excluir esta atividade?', {buttons: {'Sim':true, 'N&atilde;o':false}, callback: deletarReg} );	
 }
 
-function abrirTelaCadastroAtividade(codProjeto){
-	limparTelaAtividade();
-	$("#idProjetoDaAtividade").val(codProjeto);
-	$('#formCadastroAtividade').dialog('open');	
-    $('#formCadastroAtividade').dialog('option', 'title', 'Manter Atividades');	   
-}
-
-function mostrarDadosParaEditarAtividade(codAtividade)
+/*function mostrarDadosParaEditarAtividade(codAtividade)
 {
 			$.ajax({
 				url:'../activity.do?acao=consultar',
@@ -197,43 +217,10 @@ function mostrarDadosParaEditarAtividade(codAtividade)
 					$.prompt('Os dados n&atilde;o foramo salvos. Motivo: ' + xhr.status + ', ' + xhr.statusText + ' | ' + er);
 				}
 			});		
-}
-
-function listarAtividades(codProjeto){
-	$.ajax({
-		url:'../activity.do',
-        dataType: 'xml',
-        mimeType: 'application/xml',
-        data:{acao:'listar', idProjetoDaAtividade:codProjeto},
-        type:'POST',
-		success: function( xml ){
-			$('#atividades_projeto').html("");	
-			var html = "";	
-			$(xml).find('atividade').each(function(){
-				html += "<tr>";			
-				html += "<td>" +$(this).find('nomePrograma').text()+ "</td>";
-				html += "<td>" +$(this).find('versaoPrograma').text() + "</td>";		
-				html += "<td>" +$(this).find('funcao').text()  + "</td>";		
-				html += "<td>"+formatarData($(this).find('dataHoraInicio').text()) +"</td>";		
-				html += "<td>"+formatarData($(this).find('dataHoraFim').text()) +"</td>";				
-				html+= "<td><img src='../_img/edit.png' alt='Editar registro' onClick='mostrarDadosParaEditarAtividade("+$(this).find('idAtividade').text()+");'/></td>";																											
-				html+= "<td><img src='../_img/cancelar.png' alt='Excluir registro' onClick='excluirAtividade("+$(this).find('idAtividade').text()+");'/></td>";
-				html +="</tr>";		
-			});
-			$('#atividades_projeto').html(html);
-			$('#idProjetoAtual').val(codProjeto);	
-		},
-		error: function( xhr, er ){
-			$.prompt('Os dados n&atilde;o foram salvos. Motivo: ' + xhr.status + ', ' + xhr.statusText + ' | ' + er);
-		}
-	});		
+}*/
 
 
-}
-
-
-
-function limparTelaAtividade(){
+function limparTela(){
 	$("#txtPrograma").val("");		
 	$("#txtVersao").val("");		
 	$("#txtFuncao").val("");		

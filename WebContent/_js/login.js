@@ -60,7 +60,7 @@ function autenticarUsuario(){
 		type:'POST',
 		success: function( data ){
 			if (data == "sucesso"){
-				window.location.href = 'pages/home.html';
+				window.location.href = 'pages/home.jsp';
 			} else {
 				$.prompt("Usu&aacute;rio inv&aacute;lido! Tente novamente.");
 			}

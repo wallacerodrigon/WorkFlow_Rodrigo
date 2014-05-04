@@ -2,6 +2,7 @@ package servlets;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -19,8 +20,6 @@ public class LoginServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final String USUARIO_PADRAO = "fulano";
-	private static final String SENHA_PADRAO = "123";
 	private static final String NOME_USR_PADRAO = "Rodrigo Pinheiro";
 	
 	private static final String NOME_USUARIO_NA_SESSAO= "usuarioLogado";
@@ -53,9 +52,17 @@ public class LoginServlet extends HttpServlet {
 			} else if (acao.equalsIgnoreCase("cadastro")){
 				this.cadastrarUsuario(request, response, usuario);
 			} else if (acao.equalsIgnoreCase("logoff")) {
+				removerTodosAtributosDaSessao(request);
 				request.getSession().invalidate();
 				retornarResposta(true, response);
 			}
+		}
+	}
+
+	private void removerTodosAtributosDaSessao(HttpServletRequest request) {
+		Enumeration<String> names = request.getSession().getAttributeNames();
+		while (names.hasMoreElements()){
+			request.getSession().removeAttribute(names.nextElement());
 		}
 	}
 

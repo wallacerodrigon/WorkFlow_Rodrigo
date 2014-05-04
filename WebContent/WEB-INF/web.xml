@@ -39,7 +39,16 @@
     <servlet-name>LoginServlet</servlet-name>
     <url-pattern>/login.do</url-pattern>
   </servlet-mapping>
-  
+  <servlet>
+    <description>Experiment maintaince</description>
+    <display-name>ExperimentServlet</display-name>
+    <servlet-name>ExperimentServlet</servlet-name>
+    <servlet-class>servlets.ExperimentServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ExperimentServlet</servlet-name>
+    <url-pattern>/experiment.do</url-pattern>
+  </servlet-mapping>  
   <session-config>
   	<session-timeout>60</session-timeout>
   </session-config>

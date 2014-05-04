@@ -1,7 +1,7 @@
 @CHARSET "UTF-8";
 
 .tela {
-	width: 1024px;
+	width: 1124px;
 	height: 768px;
 	border: 1px solid #999999;
 	
@@ -9,7 +9,7 @@
 
 aside {
 	display:block;
-	width: 180px;
+	width: 280px;
 	float: left;
 	margin-left: 0px;
 	border-right: 1px solid #999999;
@@ -130,7 +130,8 @@ a:hover {
 	margin-left: 0px;
 	display: block;
 	float: left;
-	width: 139px
+	width: 139px;
+	padding-top:1px;
 }
 
 .classExibeArquivo{

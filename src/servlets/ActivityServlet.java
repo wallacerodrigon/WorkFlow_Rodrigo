@@ -32,6 +32,7 @@ import com.thoughtworks.xstream.XStream;
 import dao.BioInformaticaDaoIf;
 import dao.impl.AtividadeDao;
 import entidades.Atividade;
+import entidades.Experimento;
 import entidades.Projeto;
 
 /**
@@ -221,14 +222,15 @@ public class ActivityServlet extends HttpServlet {
 	private Atividade montarAtividade(HttpServletRequest request) {
 		Atividade atividade = new Atividade();
 		String idAtividade = request.getParameter("idAtividade");
-		String idProjeto = request.getParameter("idProjetoDaAtividade");
+		String idExperimento = request.getParameter("idExperimentoDaAtividade");
 		String dataHoraInicio = request.getParameter("dataInicio")+" "+request.getParameter("horaInicio");
 		String dataHoraFim = request.getParameter("dataFim")+" "+request.getParameter("horaFim");
 
+		atividade.setNomeAtividade(request.getParameter("nomeAtividade"));
 		atividade.setNomePrograma(request.getParameter("nomePrograma"));
 		atividade.setIdAtividade((idAtividade!=null && !idAtividade.equals(""))? Integer.valueOf(idAtividade): null);
-		atividade.setProjeto(new Projeto());
-		atividade.getProjeto().setIdProjeto((idProjeto != null && !idProjeto.isEmpty())? Integer.valueOf(idProjeto) : null);
+		atividade.setExperimentoOrigem(new Experimento());
+		atividade.getExperimentoOrigem().setIdExperimento((idExperimento != null && !idExperimento.isEmpty())? Integer.valueOf(idExperimento) : null);
 		atividade.setNomePrograma(request.getParameter("nomePrograma"));
 		
 		atividade.setVersaoPrograma(request.getParameter("versaoPrograma"));
@@ -255,7 +257,7 @@ public class ActivityServlet extends HttpServlet {
 	private void listar(Atividade objetoFiltro, HttpServletResponse response) throws IOException {
 		List<Atividade> listaRetorno = new ArrayList<Atividade>();
 		for(Atividade atividade : daoAtividade.listar()){
-			Integer idProjeto = objetoFiltro.getProjeto()!= null? objetoFiltro.getProjeto().getIdProjeto() : null;
+			Integer idExperimento = objetoFiltro.getExperimentoOrigem()!= null? objetoFiltro.getExperimentoOrigem().getIdExperimento() : null;
 			Integer idAtividade = objetoFiltro.getIdAtividade();
 			
 			if (idAtividade != null && idAtividade.equals(atividade.getIdAtividade())){
@@ -263,7 +265,7 @@ public class ActivityServlet extends HttpServlet {
 				break;
 			}
 			
-			if (idProjeto != null && atividade.getProjeto().getIdProjeto().equals(idProjeto)){
+			if (idExperimento != null && atividade.getExperimentoOrigem().getIdExperimento().equals(idExperimento)){
 				listaRetorno.add(atividade);
 			}
 			

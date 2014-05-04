@@ -78,5 +78,9 @@ public class Usuario implements Serializable {
 		}
 		return true;
 	}
+	
+	public static void main(String[] args) {
+		System.out.println( System.getProperties() );
+	}
 
 }

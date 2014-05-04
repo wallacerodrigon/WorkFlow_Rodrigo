@@ -11,7 +11,7 @@ public class Atividade implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Integer idAtividade;
-	private Projeto projeto;
+	private String nomeAtividade;
 	private String nomePrograma;
 	private String versaoPrograma;
 	private String linhaComando;
@@ -19,6 +19,7 @@ public class Atividade implements Serializable {
 	private Date dataHoraInicio;
 	private Date dataHoraFim;
 	private String nomeArquivo;
+	private Experimento experimentoOrigem;
 	
 	/**
 	 * @return the id
@@ -32,18 +33,7 @@ public class Atividade implements Serializable {
 	public void setIdAtividade(Integer idAtividade) {
 		this.idAtividade = idAtividade;
 	}
-	/**
-	 * @return the projeto
-	 */
-	public Projeto getProjeto() {
-		return projeto;
-	}
-	/**
-	 * @param projeto the projeto to set
-	 */
-	public void setProjeto(Projeto projeto) {
-		this.projeto = projeto;
-	}
+
 	/**
 	 * @return the nomePrograma
 	 */
@@ -128,6 +118,24 @@ public class Atividade implements Serializable {
 	public void setNomeArquivo(String nomeArquivo) {
 		this.nomeArquivo = nomeArquivo;
 	}
+	/**
+	 * @return the experimentoOrigem
+	 */
+	public Experimento getExperimentoOrigem() {
+		return experimentoOrigem;
+	}
+	/**
+	 * @param experimentoOrigem the experimentoOrigem to set
+	 */
+	public void setExperimentoOrigem(Experimento experimentoOrigem) {
+		this.experimentoOrigem = experimentoOrigem;
+	}
+	public String getNomeAtividade() {
+		return nomeAtividade;
+	}
+	public void setNomeAtividade(String nomeAtividade) {
+		this.nomeAtividade = nomeAtividade;
+	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -162,15 +170,7 @@ public class Atividade implements Serializable {
 		}
 		return true;
 	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Atividade [projeto=" + projeto + ", nomePrograma="
-				+ nomePrograma + ", versaoPrograma=" + versaoPrograma
-				+ ", funcao=" + funcao + "]";
-	}
+
 	
 
 }

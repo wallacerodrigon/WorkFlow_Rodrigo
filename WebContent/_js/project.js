@@ -1,5 +1,5 @@
 jQuery(document).ready(function(){    
-	listarProjetos();
+//	listarProjetos();
     $.datepicker.setDefaults($.extend({showMonthAfterYear: false}, $.datepicker.regional['pt-BR']));
     $("#txtInicio").datepicker($.datepicker.regional['pt-BR']);
     $("#txtFim").datepicker($.datepicker.regional['pt-BR']);
@@ -57,58 +57,42 @@ jQuery(document).ready(function(){
     	}
     });*/
 	
-	$("#formPesquisa").dialog({
-    	autoOpen: false,
-    	height: 250,
-		width: 400,
-    	modal: true,
-    	buttons: {
-    		'Fechar': function() {
-    			$(this).dialog('close');
-    		},
-    		'Desfazer Filtro': function(){
-    			$("#txtNomeFiltro").val("");
-    			$("#txtDescricaoFiltro").val("");
-    			$("#txtCoordenadorFiltro").val("");
-    		},
-			'Buscar': function(){
-    	        	$.ajax({
-    	        	    url:'../project.do?acao=consultar',
-    	        	    dataType:'xml',
-    	        	    mimeType: 'application/xml',
-    	        	    data:$('#frmPesquisar').serialize(),
-    	        	    type:'POST',
-    	        	    success: function( xml ){
-    						montarTabela(xml);
-    	        	    },	
-    	        	    error: function( xhr, er ){
-    	        	        $.prompt('Os dados n&atilde;o for&atilde;o salvos. Causa:' + data);
-    	        	    }
-    	        	});
-    	        	$(this).dialog('close');
-    	    	}				
-    	}
-    });
-
-	
-	$("#formAtividades").dialog({
-    	autoOpen: false,
-    	height: 400,
-		width: 800,
-    	modal: true,
-    	resizable: false,
-    	buttons: {
-    		'Fechar': function() {
-    			$(this).dialog('close');
-    		},
-    		'Nova Atividade': function(){
-    			abrirTelaCadastroAtividade($('#idProjetoAtual').val());
-    		}
-    	}
-	});
-	
-
 });
+
+
+function salvarProjeto(){
+	$('#lstFinanciadoras option').attr("selected", "selected");
+	$('#lstParticipantes option').attr("selected", "selected");
+
+	if (!isDadosValidos()){
+		$.prompt('Informe nome do projeto, data inicial e data final.');
+		return;
+	}
+	
+	if (!validarDataInicioFim($('#txtInicio').val(), $('#txtFim').val())){
+		$.prompt("Data inicial maior que final!");
+		return;
+	}		
+	
+	$.ajax({
+	    url:'../project.do',
+	    dataType:'html',
+	    data:$('#frmManter').serialize(),
+	    type:'POST',
+	    success: function( data ){
+  	    	if (data == "sucesso"){
+	    		$.prompt("Cadastro salvo com sucesso!");
+	    		limparTela();
+	    		window.location.reload(true);
+	    	} else {
+	    		$.prompt("Erro no cadastro. Motivo:" + data);
+	    	}
+	    },	
+	    error: function( xhr, er ){
+	        $.prompt('Os dados n&atilde;o for&atilde;o salvos. Causa:' + data);
+	    }
+	});
+}
 
 function isDadosValidos(){
 	if ($("#txtNome").val()=='' || $("#txtInicio").val()=='' || $("#txtFim").val() =='') {
@@ -117,20 +101,6 @@ function isDadosValidos(){
 	return true;
 	
 }
-
-function buscar(){
-	$('#formPesquisa').dialog('open');
-	$('#formPesquisa').dialog('option', 'title', 'Busca projetos');	
-}
-
-function atividadesDoProjeto(codProjeto){
-	$('#formAtividades').dialog('open');
-	$('#formAtividades').dialog('option', 'title', 'Atividades do Projeto');	
-	
-	listarAtividades(codProjeto);
-	
-}
-
 
 function excluir(codProjeto)
 {
@@ -162,9 +132,8 @@ function excluir(codProjeto)
 	$.prompt( 'Deseja realmente excluir este projeto?', {buttons: {'Sim':true, 'N&atilde;o':false}, callback: deletarReg} );	
 }
 
-function novoRegistro(){
+function novoRegistroProjeto(){
 	limparTela();
-	abrirTelaCadastroProjeto();	
 }
 
 function abrirTelaCadastroProjeto(){
@@ -179,25 +148,6 @@ function abrirTelaCadastroProjeto(){
 /*	$('#formCadastro').dialog('open');	
     $('#formCadastro').dialog('option', 'title', 'Manter Projeto');	   
 */}
-
-function mostrarDadosParaEditar(codProjeto)
-{
-			$.ajax({
-				url:'../project.do?acao=consultar',
-				data:{idProjeto:codProjeto},
-		        dataType: 'xml',
-		        mimeType: 'application/xml',
-				success: function( xml ){
-					mostrarDadosNaTela(xml);
-					abrirTelaCadastroProjeto();
-				    ativaAbaParticipantes();				    
-				    
-				},
-				error: function( xhr, er ){
-					$.prompt('Os dados n&atilde;o foramo salvos. Motivo: ' + xhr.status + ', ' + xhr.statusText + ' | ' + er);
-				}
-			});		
-}
 
 function mostrarDadosNaTela(xml){
 	limparTela();
@@ -226,26 +176,7 @@ function mostrarDadosNaTela(xml){
 	});	
 }
 
-function listarProjetos(){
-	$.ajax({
-		url:'../project.do',
-        dataType: 'xml',
-        mimeType: 'application/xml',
-        data:{acao:'listar'},
-        type:'POST',
-		success: function( xml ){
-			montarTabela(xml);
-		},
-		error: function( xhr, er ){
-			$.prompt('Os dados n&atilde;o foram salvos. Motivo: ' + xhr.status + ', ' + xhr.statusText + ' | ' + er);
-		}
-	});		
-
-
-}
-
-
-function montarTabela(xml){
+/*function montarTabela(xml){
 	$('#corpo_conteudo').html("");	
 	var html = "";	
 	$(xml).find('projeto').each(function(){
@@ -261,7 +192,7 @@ function montarTabela(xml){
 	});
 	$('#corpo_conteudo').html(html);		
 }
-
+*/
 function ativaAbaParticipantes(){
 	$('#inst_participantes').show('normal');
 	$('#inst_financeiras').hide('normal');
@@ -321,7 +252,7 @@ function limparTela(){
 	$("#txtCoordenador").val("");		
 	$("#txtInicio").val("");		
 	$("#txtFim").val("");				
-	$("#idProjeto").val("");	
+	$("#idProjeto").val("0");	
 	$("#txtObservacao").val("");	
 	$("#lstFinanciadoras option").remove();
 	$("#lstParticipantes option").remove();
@@ -371,20 +302,4 @@ function validarDataInicioFim(pDataInicio, pDataFim){
 	
 }
 
-function efetuarLogoff(){
-	$.ajax({
-		url:'../login.do?acao=logoff',
-		dataType:'html',
-		type:'POST',
-		success: function( data ){
-			if (data == "sucesso"){
-				window.location.href = '../index.html';
-			} else {
-				$.prompt("Erro ao efetuar logoff.");
-			}
-		},
-		error: function( xhr, er ){
-			$.prompt('Os dados n&atilde;o for&atilde;o salvos. Motivo: ' + xhr.status + ', ' + xhr.statusText + ' | ' + er);
-		}
-	});	
-}
+

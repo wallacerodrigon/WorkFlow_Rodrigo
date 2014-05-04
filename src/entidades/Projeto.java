@@ -21,6 +21,7 @@ public class Projeto implements Serializable {
 	private String observacao;
 	private Set<String> nomesInstituicoesParticipantes;
 	private Set<String> nomesInstituicoesFinanciadoras;
+	private Set<Experimento> experimentos;
 	
 
 	/**
@@ -133,6 +134,18 @@ public class Projeto implements Serializable {
 	public void setIdProjeto(Integer idProjeto) {
 		this.idProjeto = idProjeto;
 	}	
+	/**
+	 * @return the experimentos
+	 */
+	public Set<Experimento> getExperimentos() {
+		return experimentos;
+	}
+	/**
+	 * @param experimentos the experimentos to set
+	 */
+	public void setExperimentos(Set<Experimento> experimentos) {
+		this.experimentos = experimentos;
+	}
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */

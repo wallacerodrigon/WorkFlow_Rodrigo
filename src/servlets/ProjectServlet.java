@@ -19,6 +19,8 @@ import com.thoughtworks.xstream.XStream;
 
 import dao.BioInformaticaDaoIf;
 import dao.impl.ProjetoDao;
+import entidades.Atividade;
+import entidades.Experimento;
 import entidades.Projeto;
 
 /**
@@ -28,7 +30,9 @@ public class ProjectServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	private static final String NOME_LISTA_PROJETOS = "listaProjetos";
+	private static final String PROJETO_EDICAO = "projetoEdicao";
 	private BioInformaticaDaoIf<Projeto> daoProjeto;
+	private Projeto projetoEdicao = new Projeto();
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -62,16 +66,24 @@ public class ProjectServlet extends HttpServlet {
 		
 		String acao = request.getParameter("acao");
 		
-		if (acao.equalsIgnoreCase("salvar")){
+		if (acao.equalsIgnoreCase("novo")){
+			atualizarRequest(request);
+		} else if (acao.equalsIgnoreCase("salvar")){
 			tratarSalvamentoDoProjeto(request, projeto, response.getWriter());
 		} else if (acao.equalsIgnoreCase("consultar") ){
-			listarProjetos(projeto, response);
+			projetoEdicao= buscarProjeto(projeto.getIdProjeto());
+			atualizarRequest(request);
 		} else if (acao.equalsIgnoreCase("excluir")){
 			tratarExclusaoProjeto(projeto, request);
 			retornarSucesso(response.getWriter());
 		} else if (acao.equalsIgnoreCase("listar") ){
-			response.getWriter().write(this.montarXml(daoProjeto.listar()));
+			//response.getWriter().write(this.montarXml(daoProjeto.listar()));
+			atualizarSessao(request);
 		}
+	}
+
+	private void atualizarRequest(HttpServletRequest request) {
+		request.setAttribute(PROJETO_EDICAO, projetoEdicao);
 	}
 
 	private void tratarExclusaoProjeto(Projeto projeto, HttpServletRequest request) {
@@ -91,8 +103,24 @@ public class ProjectServlet extends HttpServlet {
 				return;
 			}
 		}
+		
+		Experimento exp1 = new Experimento();
+		exp1.setProjeto(projeto);
+		exp1.setIdExperimento(1);
+		exp1.setNome("Experimento de testes");
+		
+		Atividade ativ = new Atividade();
+		ativ.setIdAtividade(1);
+		ativ.setNomeAtividade("Atividade de testes 1");
+		exp1.setAtividades(new HashSet<Atividade>());
+		exp1.getAtividades().add(ativ);
+		
+		projeto.setExperimentos(new HashSet<Experimento>());
+		projeto.getExperimentos().add(exp1);
+		
 		atualizarSessao(request);
 		retornarSucesso(writer);
+		atualizarRequest(request);		
 	}
 
 	/**
@@ -153,20 +181,13 @@ public class ProjectServlet extends HttpServlet {
 		}
 	}
 
-	private void listarProjetos(Projeto projetoFiltro, HttpServletResponse response) throws IOException {
-		List<Projeto> listaRetorno = new ArrayList<Projeto>();
+	private Projeto buscarProjeto(Integer idProjeto) throws IOException {
 		for(Projeto projeto : daoProjeto.listar()){
-			if (projetoFiltro.getIdProjeto()!=null && projetoFiltro.getIdProjeto().equals(projeto.getIdProjeto())){
-				listaRetorno.add(projeto);
-				break;
-			} else if (projetoFiltro.getNome() != null && projetoFiltro.getNome().length() > 0 && projeto.getNome().toLowerCase().contains(projetoFiltro.getNome().toLowerCase()) ){
-				listaRetorno.add(projeto);
+			if (idProjeto.equals(projeto.getIdProjeto())){
+				return projeto;
 			}
-			
 		}
-		
-		//montar retorno da lista com xml
-		response.getWriter().write(this.montarXml(listaRetorno));
+		return null;
 	}
 
 	private String montarXml(List<Projeto> listaProjetos) {

@@ -9,10 +9,32 @@ jQuery(document).ready(function(){
 
 function salvarExperimento(){
 	if (! isDadosValidos() ){
-		$.prompt("Informe nome, local, versão, data inicio, data fim e data da versao");
+		$.prompt("Informe nome, local, vers&atilde;o, data inicio, data fim e data da versao");
 		return false;
 	}
-	return true;
+	
+	if (!validarDataInicioFim($('#txtDataInicio').val(), $('#txtDataFim').val())){
+		$.prompt("Data inicial maior que final!");
+		return false;
+	}		
+	
+	$.ajax({
+	    url:'../experiment.do',
+	    dataType:'html',
+	    data:$('#frmManter').serialize(),
+	    type:'POST',
+	    success: function( data ){
+  	    	if (data == "sucesso"){
+	    		$.prompt("Cadastro salvo com sucesso!");
+	    		window.location.reload(true);
+	    	} else {
+	    		$.prompt("Erro no cadastro. Motivo:" + data);
+	    	}
+	    },	
+	    error: function( xhr, er ){
+	        $.prompt('Os dados n&atilde;o for&atilde;o salvos. Causa:' + data);
+	    }
+	});
 }
 
 
@@ -31,7 +53,7 @@ function isDadosValidos(){
 	
 }
 
-function excluir(codigo)
+function deletarProjeto()
 {
     var deletarReg = 
 	function (v,m,f){
@@ -40,16 +62,16 @@ function excluir(codigo)
 			$.ajax({
 				url:'../experiment.do?acao=excluir',
 				dataType:'text',
-				data:{idAtividade:codigo},
+				data:{idExperimento:$("#idExperimento").val()},
 				type:'POST',
 				success: function( data, textStatus ){
 					if( data == 'sucesso' ){
 						$.prompt( 'Registro excluido com sucesso!'); 
-												
+						window.location.reload();						
 					}
 					else
 					{
-						$.prompt( 'Os dados n&atilde;o foram exclu&iacute;dos. Favor tentar novamente' );
+						$.prompt( 'Os dados n&atilde;o for&atilde;o exclu&iacute;do. Favor tentar novamente' );
 					}
 				},
 				error: function( xhr, er ){
@@ -58,16 +80,17 @@ function excluir(codigo)
 			});
 		}
 	};
-	$.prompt( 'Deseja realmente excluir este experimento?', {buttons: {'Sim':true, 'N&atilde;o':false}, callback: deletarReg} );	
+	$.prompt( 'Deseja realmente excluir este projeto?', {buttons: {'Sim':true, 'N&atilde;o':false}, callback: deletarReg} );	
 }
 
 function limparTela(){
-	$("#txtNome").val("");		
+	$("#txtNome").val("");	
 	$("#txtLocal").val("");		
 	$("#txtVersao").val("");		
 	$("#txtDataInicio").val("");				
 	$("#txtDataFim").val("");
-	$("#txtDataVersao").val("");				
+	$("#txtDataVersao").val("");
+	$("#txtObservacao").val("");
+	$("#txtDescricao").val("");
+	
 }
-
-

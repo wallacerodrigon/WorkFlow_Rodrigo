@@ -3,9 +3,13 @@
 <meta charset="UTF-8">
 <body>
 	<form method="post" enctype="multipart/form-data" id="frmUpload" action="../activity.do?acao=upload">
-		<div style="border:0px">
-			 <input type="file" id="txtArquivo" name="arquivo">
-		     <input type="submit" id="btnEnviar" value="Iniciar Upload" style="margin-left:300px">
-		</div>
+		<table style="width:100%">
+			 <tr>
+			 	<td><input type="file" id="txtArquivo" name="arquivo"></td>
+		     </tr>
+		     <tr>
+		     	<td><input type="submit" id="btnEnviar" value="Iniciar Upload"></td>
+		     </tr>
+		</table>
 	</form>
 </body>

@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -23,7 +24,13 @@
 	<script src="../jquery/jquery.js" type="text/javascript"></script>
 	<script src="../jquery/jquery.cookie.js" type="text/javascript"></script>
 	<script src="../jquery/jquery.treeview.js" type="text/javascript"></script>
-
+	<script src="../_js/funcoes.js" type="text/javascript"></script>
     <script src="../_js/home.js" type="text/javascript"></script>
 
 </head>  
+<%-- <c:if test="${empty sessionScope.usuarioLogado}">
+	<h1>Usu&aacute;rio n&atilde;o autenticado!</h1>
+	<h5>Clique <a href="../index.jsp">aqui</a> para autenticar-se no sistema!</h5>
+</c:if>
+ --%>
+

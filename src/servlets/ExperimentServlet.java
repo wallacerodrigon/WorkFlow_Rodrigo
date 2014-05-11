@@ -5,14 +5,13 @@ import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.thoughtworks.xstream.XStream;
 
 import dao.BioInformaticaDaoIf;
 import dao.impl.ExperimentoDaoImpl;
@@ -24,9 +23,11 @@ import entidades.Projeto;
  */
 public class ExperimentServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String NOME_LISTA_EXPERIMENTOS = "listaExperimentos";
-
+	public static final String NOME_LISTA_EXPERIMENTOS = "listaExperimentos";
+	private static final String OBJETO_EDICAO = "experimento";
+	private Experimento experimento;
 	private BioInformaticaDaoIf<Experimento> daoExperimento;
+
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -44,32 +45,36 @@ public class ExperimentServlet extends HttpServlet {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void criarAtividadeDao(HttpServletRequest request) throws IOException {
+	private void criarExperimentoDao(HttpServletRequest request) throws IOException {
 		if (daoExperimento == null){
 			request.getSession().setAttribute(NOME_LISTA_EXPERIMENTOS, new ArrayList<Projeto>());
 	        daoExperimento = new ExperimentoDaoImpl((List<Experimento>) request.getSession().getAttribute(NOME_LISTA_EXPERIMENTOS));
 		}		
 	}
 
+	
+	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		criarAtividadeDao(request);
-		Experimento experimento = montarExperimento(request);
+		criarExperimentoDao(request);
+		experimento = montarExperimento(request);
 		
 		String acao = request.getParameter("acao");
 		
-		if (acao.equalsIgnoreCase("salvar")){
+		if (acao.equalsIgnoreCase("novo")){
+			atualizarSessao(request);
+		} else if (acao.equalsIgnoreCase("salvar")){
 			tratarSalvamentoDoObjeto(request, experimento, response.getWriter());
 		} else if (acao.equalsIgnoreCase("consultar") ){
-			listar(experimento, response);
+			experimento = buscarExperimento(experimento.getIdExperimento());
+			atualizarSessao(request);
 		} else if (acao.equalsIgnoreCase("excluir")){
 			tratarExclusaoProjeto(experimento, request);
-			retornarSucesso(response.getWriter());
-		} else if (acao.equalsIgnoreCase("listar") ){
-			this.listar(experimento, response);
 		} 
+		retornarSucesso(response.getWriter());
+		
 	}
 
 	private void tratarExclusaoProjeto(Experimento experimento, HttpServletRequest request) {
@@ -89,8 +94,17 @@ public class ExperimentServlet extends HttpServlet {
 				return;
 			}
 		}
+		//adiciona o experimento � lista dos experimentos do projeto
+		Projeto projeto;
+		try {
+			projeto = this.buscarProjeto(Integer.valueOf(experimento.getProjeto().getIdProjeto()), request);
+			if (projeto.getExperimentos() == null){
+				projeto.setExperimentos(new HashSet<Experimento>());
+			}
+			projeto.getExperimentos().add(experimento);
+		} catch (IOException e) {
+		}
 		atualizarSessao(request);
-		retornarSucesso(writer);
 	}
 
 	/**
@@ -98,6 +112,7 @@ public class ExperimentServlet extends HttpServlet {
 	 */
 	private void atualizarSessao(HttpServletRequest request) {
 		request.getSession().setAttribute(NOME_LISTA_EXPERIMENTOS, daoExperimento.listar());
+		request.getSession().setAttribute(OBJETO_EDICAO, experimento);
 	}
 
 	private void retornarSucesso(PrintWriter writer) {
@@ -111,20 +126,30 @@ public class ExperimentServlet extends HttpServlet {
 
 
 	private Experimento montarExperimento(HttpServletRequest request) {
-		Experimento experimento = new Experimento();
+		
+		System.out.println("Id projeto:" + request.getParameter("idProjeto"));
+		
+		experimento = new Experimento();
 		String idExperimento = request.getParameter("idExperimento");
-		String idProjeto = request.getParameter("idProjetoDaAtividade");
+		String idProjeto = request.getParameter("idProjeto");
 		String dataInicio = request.getParameter("dataInicio");
 		String dataVersao = request.getParameter("dataVersao");
 		String dataFim = request.getParameter("dataFim");
 
-		experimento.setIdExperimento(Integer.valueOf(idExperimento));
+		if (idExperimento != null){
+			experimento.setIdExperimento(Integer.valueOf(idExperimento));
+		}
 		experimento.setAnotacoes(request.getParameter("anotacoes"));
 		experimento.setDescricao(request.getParameter("descricao"));
 		experimento.setLocalExecucao(request.getParameter("localExecucao"));
 		experimento.setNome(request.getParameter("nomeExperimento"));
 		experimento.setProjeto(new Projeto());
-		experimento.getProjeto().setIdProjeto(Integer.valueOf(idProjeto));
+		if (idProjeto != null && !idProjeto.isEmpty() ){
+			experimento.getProjeto().setIdProjeto(Integer.valueOf(idProjeto));
+		} else {
+			experimento.getProjeto().setIdProjeto(0);
+		}
+		
 		experimento.setVersao(request.getParameter("versao"));
 		
 		try {
@@ -150,34 +175,29 @@ public class ExperimentServlet extends HttpServlet {
 	}
 
 
-	private void listar(Experimento objetoFiltro, HttpServletResponse response) throws IOException {
-		List<Experimento> listaRetorno = new ArrayList<Experimento>();
-		for(Experimento atividade : daoExperimento.listar()){
-			Integer idExperimento = objetoFiltro.getIdExperimento();
-			
-			if (idExperimento != null && idExperimento.equals(atividade.getIdExperimento())){
-				listaRetorno.add(atividade);
-				break;
+	private Experimento buscarExperimento(Integer idExperimento) throws IOException {
+		for(Experimento experimento : daoExperimento.listar()){
+			if (idExperimento != null && idExperimento.equals(experimento.getIdExperimento())){
+				return experimento;
 			}
 		}
-		response.getWriter().write(this.montarXml(listaRetorno));
+		return null;
 	}
 
-	private String montarXml(List<Experimento> listaExperimento) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		
-		XStream x = new XStream();
-		x.alias(NOME_LISTA_EXPERIMENTOS, List.class);
-		x.alias("experimento", Experimento.class);
-		builder.append(x.toXML(listaExperimento));
-		
 
-		
-		return builder.toString();
-	}
-	
-	
+	@SuppressWarnings("unchecked")
+	private Projeto buscarProjeto(Integer idProjeto, HttpServletRequest request) throws IOException {
+		List<Projeto> projetos = (List<Projeto>) request.getSession().getAttribute(ProjectServlet.NOME_LISTA_PROJETOS);
+		if (projetos != null && projetos.size() >0){
+
+			for(Projeto p : projetos){
+				if (idProjeto.equals(p.getIdProjeto())){
+					return p;
+				}
+			}
+		}
+		return null;
+	}	
 
 }
 

@@ -13,6 +13,7 @@ import java.io.Writer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -43,6 +44,8 @@ public class ActivityServlet extends HttpServlet {
 	private static final String NOME_LISTA_ATIVIDADES = "listaAtividades";
 	private static final String PATH_IMAGEM = "/";
 	private static final String MENSAGEM_ERRO_UPLOAD = "[erro de upload]";
+	private static final String NOME_OBJETO = "atividade";
+	private Atividade atividade;
 
 	private BioInformaticaDaoIf<Atividade> daoAtividade;
 	
@@ -74,16 +77,22 @@ public class ActivityServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		criarAtividadeDao(request);
-		Atividade atividade = montarAtividade(request);
+		atividade = montarAtividade(request);
 		
 		String acao = request.getParameter("acao");
 		
-		if (acao.equalsIgnoreCase("salvar")){
+		if (acao.equalsIgnoreCase("novo")){
+			atualizarObjetoNaSessao(request);
+			retornarSucesso(response.getWriter());
+		} else if (acao.equalsIgnoreCase("salvar")){
 			tratarSalvamentoDoObjeto(request, atividade, response.getWriter());
 		} else if (acao.equalsIgnoreCase("consultar") ){
-			listar(atividade, response);
+			atividade = buscarAtividade(atividade.getIdAtividade());
+			atualizarObjetoNaSessao(request);
+			retornarSucesso(response.getWriter());
 		} else if (acao.equalsIgnoreCase("excluir")){
 			tratarExclusaoProjeto(atividade, request);
+			atualizarObjetoNaSessao(request);			
 			retornarSucesso(response.getWriter());
 		} else if (acao.equalsIgnoreCase("executar")){
 			executarComando(request.getParameter("linhaComando"), request.getParameter("nomeArquivo"), response);
@@ -93,8 +102,12 @@ public class ActivityServlet extends HttpServlet {
 			if (! efetuarUpload(request).equalsIgnoreCase(MENSAGEM_ERRO_UPLOAD) ){
 				retornarComandoAtualizacaoTela(response);	
 			}
-			
 		}
+	}
+
+	private void atualizarObjetoNaSessao(HttpServletRequest request) {
+		request.getSession().setAttribute(NOME_OBJETO, atividade);
+		
 	}
 
 	private void retornarComandoAtualizacaoTela(HttpServletResponse response) throws IOException {
@@ -198,8 +211,28 @@ public class ActivityServlet extends HttpServlet {
 				return;
 			}
 		}
+		Experimento experimento = buscarExperimentoNaSessao(request, atividade.getExperimentoOrigem().getIdExperimento());
+		if (experimento != null){
+			if (experimento.getAtividades() == null ){
+				experimento.setAtividades(new HashSet<Atividade>());
+			}
+			atividade.setExperimentoOrigem(experimento);
+			experimento.getAtividades().add(atividade);
+		}
 		atualizarSessao(request);
+		atualizarObjetoNaSessao(request);
 		retornarSucesso(writer);
+	}
+
+	@SuppressWarnings("unchecked")
+	private Experimento buscarExperimentoNaSessao(HttpServletRequest request, Integer idExperimento) {
+		List<Experimento> experimentos = (List<Experimento>) request.getSession().getAttribute(ExperimentServlet.NOME_LISTA_EXPERIMENTOS);
+		for(Experimento e : experimentos){
+			if (e.getIdExperimento().equals(idExperimento)){
+				return e;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -222,7 +255,7 @@ public class ActivityServlet extends HttpServlet {
 	private Atividade montarAtividade(HttpServletRequest request) {
 		Atividade atividade = new Atividade();
 		String idAtividade = request.getParameter("idAtividade");
-		String idExperimento = request.getParameter("idExperimentoDaAtividade");
+		String idExperimento = request.getParameter("idExperimento");
 		String dataHoraInicio = request.getParameter("dataInicio")+" "+request.getParameter("horaInicio");
 		String dataHoraFim = request.getParameter("dataFim")+" "+request.getParameter("horaFim");
 
@@ -274,6 +307,15 @@ public class ActivityServlet extends HttpServlet {
 		//montar retorno da lista com xml
 		response.getWriter().write(this.montarXml(listaRetorno));
 	}
+	
+	private Atividade buscarAtividade(Integer idAtividade) throws IOException {
+		for(Atividade atividade : daoAtividade.listar()){
+			if (idAtividade.equals(atividade.getIdAtividade())){
+				return atividade;
+			}
+		}
+		return null;
+	}	
 
 	private String montarXml(List<Atividade> listaAtividade) {
 		StringBuilder builder = new StringBuilder();

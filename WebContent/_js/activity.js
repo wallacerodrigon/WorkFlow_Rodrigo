@@ -6,57 +6,6 @@ jQuery(document).ready(function(){
     $("#txtHoraInicioAtividade").mask("99:99");    
     $("#txtHoraFimAtividade").mask("99:99");
 	
-/*	$("#formCadastroAtividade").dialog({
-    	autoOpen: false,
-    	height: 550,
-		width: 550,
-		resizable:false,
-    	modal: true,
-    	buttons: {
-    		'Fechar': function() {
-    			$(this).dialog('close');
-    		},
-			'Salvar': function(){
-				
-				if (! isDadosValidosDaAtividade()){
-					$.prompt("Informe arquivo do programa, data e horas inicio e fim.");
-					return;
-				}
-				
-				//validar data e hora
-				if (!validarDataInicioFim($('#txtInicioAtividade').val() + ' ' +$("#txtHoraInicioAtividade").val(), $('#txtFimAtividade').val() + ' ' +$("#txtHoraFimAtividade").val())){
-					$.prompt("Data/hora iniciais maior que finais!");
-					return;
-				}	
-				mostrarNomeArquivo();
-				
-	        	$.ajax({
-	        	    url:'../activity.do?acao=salvar',
-	        	    dataType:'html',
-	        	    data:$('#frmManterAtividade').serialize(),
-	        	    type:'POST',
-	        	    success: function( data ){
-	          	    	if (data == "sucesso"){
-	        	    		$.prompt("Cadastro salvo com sucesso!");
-	        	    		limparTelaAtividade();
-	        	    		listarAtividades($('#idProjetoAtual').val());
-	        	    	} else {
-	        	    		$.prompt("Erro no cadastro. Motivo:" + data);
-	        	    	}
-	        	    },	
-	        	    error: function( xhr, er ){
-	        	        $.prompt('Os dados n&atilde;o for&atilde;o salvos. Causa:' + data);
-	        	    }
-	        	});
-	        	$(this).dialog('close');				
-			},
-    		'Executar': function(){
-    			executarComando($("#txtComando").val(), $("#txtNomeArquivo").val());
-    		}
-
-    	}
-    });
-	
 	$("#telaResultadoComando").dialog({
     	autoOpen: false,
     	height: 500,
@@ -74,13 +23,13 @@ jQuery(document).ready(function(){
     	height: 200,
 		width: 500,
     	modal: true,
-	});	*/	
+	});
 	
 });
 
 function salvarAtividade(){
 	if (! isDadosValidosDaAtividade()){
-		$.prompt("Informe arquivo do programa, data e horas inicio e fim.");
+		$.prompt("Informe arquivo do programa, datas e horas inicio e fim.");
 		return;
 	}
 	
@@ -112,10 +61,10 @@ function salvarAtividade(){
 	
 }
 
-function executarComando(pLinhaComando, pNomeArquivo){
+function executarComando(){
 	$.ajax({
 		url:'../activity.do?acao=executar',
-		data:{linhaComando:pLinhaComando, nomeArquivo:pNomeArquivo},
+		data:{linhaComando:$("#linhaComando").val(), nomeArquivo:$("#txtNomeArquivo").val()},
         dataType: 'html',
 	    beforeSend: function(){
 	    	$("#divProcessando").dialog('open');
@@ -146,7 +95,7 @@ function isDadosValidosDaAtividade(){
 	
 }
 
-function excluirAtividade(codAtividade)
+function deletarAtividade(codAtividade)
 {
     var deletarReg = 
 	function (v,m,f){
@@ -175,49 +124,6 @@ function excluirAtividade(codAtividade)
 	};
 	$.prompt( 'Deseja realmente excluir esta atividade?', {buttons: {'Sim':true, 'N&atilde;o':false}, callback: deletarReg} );	
 }
-
-/*function mostrarDadosParaEditarAtividade(codAtividade)
-{
-			$.ajax({
-				url:'../activity.do?acao=consultar',
-				data:{idAtividade:codAtividade},
-		        dataType: 'xml',
-		        mimeType: 'application/xml',
-				success: function( xml ){
-					limparTelaAtividade();
-					
-					$(xml).find('atividade').each(function(){
-						$("#idProjetoDaAtividade").val($(this).find('idProjeto').text());
-						$("#txtPrograma").val($(this).find('nomePrograma').text());		
-						$("#txtVersao").val($(this).find('versaoPrograma').text());		
-						$("#txtFuncao").val($(this).find('funcao').text());
-						
-						var dataHoraInicio = $(this).find('dataHoraInicio').text();
-						var dataHoraFim    = $(this).find('dataHoraFim').text();
-						
-						$("#txtInicioAtividade").val(formatarData(dataHoraInicio.substring(0,10)));				
-						$("#txtFimAtividade").val(formatarData(dataHoraFim.substring(0,10)));
-						
-						$("#txtHoraInicioAtividade").val(dataHoraInicio.substring(11,16));				
-						$("#txtHoraFimAtividade").val(dataHoraFim.substring(11,16));
-						
-						
-						$("#txtComando").val($(this).find('linhaComando').text());	
-						$("#idAtividade").val($(this).find('idAtividade').text());
-						
-						var nomeArquivo = $(this).find('nomeArquivo').text();
-						$("#txtNomeArquivo").val(nomeArquivo);
-						$("#nomeArquivoSelecionado").html("Arquivo selecionado:" + nomeArquivo);
-						$("#btnEnviar").hide('normal');
-					});	
-					$('#formCadastroAtividade').dialog('open');	
-				    $('#formCadastroAtividade').dialog('option', 'title', 'Manter Atividades');	   					
-				},
-				error: function( xhr, er ){
-					$.prompt('Os dados n&atilde;o foramo salvos. Motivo: ' + xhr.status + ', ' + xhr.statusText + ' | ' + er);
-				}
-			});		
-}*/
 
 
 function limparTela(){
@@ -255,5 +161,4 @@ function mostrarNomeArquivo(){
 		$("#btnEnviar").hide('normal');
 	}
 }
-
 

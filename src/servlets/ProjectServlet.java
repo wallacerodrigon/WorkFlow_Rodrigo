@@ -15,8 +15,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.thoughtworks.xstream.XStream;
-
 import dao.BioInformaticaDaoIf;
 import dao.impl.ProjetoDao;
 import entidades.Atividade;
@@ -29,8 +27,8 @@ import entidades.Projeto;
 public class ProjectServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	private static final String NOME_LISTA_PROJETOS = "listaProjetos";
-	private static final String PROJETO_EDICAO = "projetoEdicao";
+	protected static final String NOME_LISTA_PROJETOS = "listaProjetos";
+	private static final String PROJETO_EDICAO = "projeto";
 	private BioInformaticaDaoIf<Projeto> daoProjeto;
 	private Projeto projetoEdicao = new Projeto();
 	
@@ -67,12 +65,15 @@ public class ProjectServlet extends HttpServlet {
 		String acao = request.getParameter("acao");
 		
 		if (acao.equalsIgnoreCase("novo")){
+			projetoEdicao = new Projeto();
 			atualizarRequest(request);
+			retornarSucesso(response.getWriter());
 		} else if (acao.equalsIgnoreCase("salvar")){
 			tratarSalvamentoDoProjeto(request, projeto, response.getWriter());
 		} else if (acao.equalsIgnoreCase("consultar") ){
 			projetoEdicao= buscarProjeto(projeto.getIdProjeto());
 			atualizarRequest(request);
+			retornarSucesso(response.getWriter());
 		} else if (acao.equalsIgnoreCase("excluir")){
 			tratarExclusaoProjeto(projeto, request);
 			retornarSucesso(response.getWriter());
@@ -83,7 +84,7 @@ public class ProjectServlet extends HttpServlet {
 	}
 
 	private void atualizarRequest(HttpServletRequest request) {
-		request.setAttribute(PROJETO_EDICAO, projetoEdicao);
+		request.getSession().setAttribute(PROJETO_EDICAO, projetoEdicao);
 	}
 
 	private void tratarExclusaoProjeto(Projeto projeto, HttpServletRequest request) {
@@ -103,24 +104,9 @@ public class ProjectServlet extends HttpServlet {
 				return;
 			}
 		}
-		
-		Experimento exp1 = new Experimento();
-		exp1.setProjeto(projeto);
-		exp1.setIdExperimento(1);
-		exp1.setNome("Experimento de testes");
-		
-		Atividade ativ = new Atividade();
-		ativ.setIdAtividade(1);
-		ativ.setNomeAtividade("Atividade de testes 1");
-		exp1.setAtividades(new HashSet<Atividade>());
-		exp1.getAtividades().add(ativ);
-		
-		projeto.setExperimentos(new HashSet<Experimento>());
-		projeto.getExperimentos().add(exp1);
-		
+		atualizarRequest(request);		
 		atualizarSessao(request);
 		retornarSucesso(writer);
-		atualizarRequest(request);		
 	}
 
 	/**
@@ -190,7 +176,7 @@ public class ProjectServlet extends HttpServlet {
 		return null;
 	}
 
-	private String montarXml(List<Projeto> listaProjetos) {
+/*	private String montarXml(List<Projeto> listaProjetos) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		
@@ -202,5 +188,5 @@ public class ProjectServlet extends HttpServlet {
 		System.out.println(builder.toString());
 		
 		return builder.toString();
-	}
+	}*/
 }

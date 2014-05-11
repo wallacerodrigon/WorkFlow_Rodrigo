@@ -24,6 +24,10 @@ public class Projeto implements Serializable {
 	private Set<Experimento> experimentos;
 	
 
+	public Projeto(){
+		this.idProjeto = 0;
+	}
+	
 	/**
 	 * @return the nome
 	 */

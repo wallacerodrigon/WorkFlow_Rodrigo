@@ -1,6 +1,6 @@
+<%@page session="true" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@include file="header.jsp" %>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <link rel="stylesheet" type="text/css" href="../jquery/tabs.css"/>
 
 <!--jquery-->	
@@ -19,33 +19,35 @@
 		<fieldset>
 				<legend>Manuten&ccedil;&atilde;o de atividades</legend>
 				<div  class="rotulo">Nome da Atividade:</div>
-				<input type=text id="txtNome" name="nomeAtividade" maxlength="50" style="width:500px">
+				<input type=text id="txtNome" name="nomeAtividade" maxlength="50" style="width:500px"  value="${atividade.nomeAtividade}">
 				<br>
 				
 				<div  class="rotulo">Programa:</div>
-				<input type=text id="txtPrograma" name="nomePrograma" maxlength="50" style="width:500px">
+				<input type=text id="txtPrograma" name="nomePrograma" maxlength="50" style="width:500px"  value="${atividade.nomePrograma}">
 				<br>
 				
 				<div class="rotulo">Vers&atilde;o:</div>
-				<input type="text" id="txtVersao" name="versaoPrograma" maxlength="50" size="22">
+				<input type="text" id="txtVersao" name="versaoPrograma" maxlength="50" size="22"  value="${atividade.versaoPrograma}">
 				<br>
 
 				<div class="rotulo">Fun&ccedil;&atilde;o:</div>
-				<input type="text" id="txtFuncao" name="funcao" maxlength="50" style="width:500px">
+				<input type="text" id="txtFuncao" name="funcao" maxlength="50" style="width:500px"  value="${atividade.funcao}">
 				<br>
 				
 				<div class="rotulo">Data/Hora in&iacute;cio:</div>
-				<input type="text" id="txtInicioAtividade" name="dataInicio" maxlength="50" size="20">
-				<input type="text" id="txtHoraInicioAtividade" name="horaInicio" maxlength="50" size="10">
+				<input type="text" id="txtInicioAtividade" name="dataInicio" maxlength="50" size="20"  value="<fmt:formatDate value="${atividade.dataHoraInicio}" pattern="dd/MM/yyyy"/>">
+				<input type="text" id="txtHoraInicioAtividade" name="horaInicio" maxlength="50" size="10"  value="<fmt:formatDate value="${atividade.dataHoraInicio}" pattern="hh:mm"/>">
 				<br>
 				
 				<div class="rotulo">Data/Hora fim:</div>
-				<input type="text" id="txtFimAtividade" name="dataFim" maxlength="50" size="20">
-				<input type="text" id="txtHoraFimAtividade" name="horaFim" maxlength="50" size="10">
+				<input type="text" id="txtFimAtividade" name="dataFim" maxlength="50" size="20"  value="<fmt:formatDate value="${atividade.dataHoraFim}" pattern="dd/MM/yyyy"/>">
+				<input type="text" id="txtHoraFimAtividade" name="horaFim" maxlength="50" size="10"  value="<fmt:formatDate value="${atividade.dataHoraFim}" pattern="hh:mm"/>">
 				<br>
 				
 				<div class="rotulo">Linha de comando:</div>
-				<textarea id="txtComando" name="linhaComando" rows="5" maxlength="100" style="width: 500px"></textarea>
+				<textarea id="txtComando" name="linhaComando" rows="5" maxlength="100" style="width: 500px">
+				 ${atividade.linhaComando}
+				</textarea>
 				<br>
 				
 				<div class="rotulo">Arquivo:</div>
@@ -54,11 +56,22 @@
 				<br>
 				<input type="hidden" id="txtNomeArquivo" name="nomeArquivo"/>
 				<input type="hidden" name="acao" value="salvar"/>
-				<input type="hidden" name="idAtividade" id="idAtividade"/>
-				<input type="hidden" id="idExperimento" name="idExperimento"/>
+				
+				<input type="hidden" id="idExperimento" name="idExperimento" value="${atividade.experimentoOrigem.idExperimento}"/>
+				
+				<input type="button" value="Executar Comando" onclick="executarComando()">
+				<input type="button" value="Limpar" onclick="limparTela()">
+				<c:choose>
+					<c:when test="${not empty atividade.idAtividade && atividade.idAtividade gt 0}">
+					    <input type="hidden" name="idAtividade" id="idAtividade" value="${atividade.idAtividade}"/>
+						<input type="button" value="Excluir" onclick="deletarAtividade()"/>			
+					</c:when>
+					<c:otherwise>
+						<input type="hidden" name="idAtividade" id="idAtividade" value="0"/>		
+					</c:otherwise>
+				</c:choose>
 				
 				
-				<input type="button" value="Novo" onclick="limparTela()">
 				<input type="button" value="Salvar" onclick="salvarAtividade()">
 		</fieldset>
 	</form>

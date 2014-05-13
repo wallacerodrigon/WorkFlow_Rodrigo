@@ -27,6 +27,9 @@
 	<script src="../_js/funcoes.js" type="text/javascript"></script>
     <script src="../_js/home.js" type="text/javascript"></script>
 
+<script src="../jquery/ui/jquery-ui-1.7.2.custom.js" type="text/javascript"></script>
+<script src="../jquery/ui/jquery.ui-contextmenu.js" type="text/javascript"></script>
+
 </head>  
 <%-- <c:if test="${empty sessionScope.usuarioLogado}">
 	<h1>Usu&aacute;rio n&atilde;o autenticado!</h1>

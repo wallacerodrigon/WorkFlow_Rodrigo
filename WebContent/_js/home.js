@@ -2,14 +2,6 @@ $(document).ready(function(){
 
 	$("#projetos").treeview();
 	
-	$("#formInclusaoItem").dialog({
-		
-		autoOpen:false,
-		width: 300, 
-		height: 50,
-		modal:false
-	});
-	
 	
 }); 
 
@@ -44,14 +36,17 @@ function efetuarLogoff(){
 
 function novoProjeto(){
 	enviar("../project.do?acao=novo", "project.jsp", true, "exibicao_conteudo");
+	fecharTodosMenus();
 }
 
 function novoExperimento(idProjeto){
 	enviar("../experiment.do?acao=novo&idProjeto="+idProjeto, "experiments.jsp", true, "exibicao_conteudo");
+	fecharTodosMenus();
 }
 
 function novaAtividade(idExperimento){
 	enviar("../activity.do?acao=novo&idExperimento="+idExperimento, "activity.jsp", true, "exibicao_conteudo");
+	fecharTodosMenus();
 }
 
 
@@ -78,3 +73,49 @@ function enviar(pUrl, pNomeTelaAbrir, pAbreNoFrame, pIdTela ){
 	
 }
 
+function fecharTodosMenus(){
+	$(".menu_contexto").each(function(){
+		$(this).hide('normal');
+	});	
+}
+
+function mostrarContexto(pElemOrigem, pIdMenu){
+	//pegar a posição do clique
+	fecharTodosMenus();
+	var menu = document.getElementById(pIdMenu);
+	var posicaoElemento = getPosicaoElemento(pElemOrigem.id);
+	var largura = (pElemOrigem.width != null)? pElemOrigem.width : 50;
+	
+	var left = posicaoElemento.left + (largura/2);
+	var top = posicaoElemento.top + (pElemOrigem.height/2);
+	
+	menu.style.visibility = "visible";
+	menu.style.display = "block";
+	menu.style.position="absolute";
+	menu.style.top = top + "px";
+	menu.style.left= left + "px";
+	menu.style.border="1px solid #000000";
+	menu.style.background="#ffffff";
+	menu.style.boxShadow= "5px 5px 5px rgba(0,0,0, 0.4)";
+}	
+
+function apagarContexto(pIdMenu){
+	$("#"+pIdMenu).hide('normal');
+}
+
+function getPosicaoElemento(elemID){
+    var offsetTrail = document.getElementById(elemID);
+    var offsetLeft = 0;
+    var offsetTop = 0;
+    while (offsetTrail) {
+        offsetLeft += offsetTrail.offsetLeft;
+        offsetTop += offsetTrail.offsetTop;
+        offsetTrail = offsetTrail.offsetParent;
+    }
+    if (navigator.userAgent.indexOf("Mac") != -1 && 
+        typeof document.body.leftMargin != "undefined") {
+        offsetLeft += document.body.leftMargin;
+        offsetTop += document.body.topMargin;
+    }
+    return {left:offsetLeft, top:offsetTop};
+}

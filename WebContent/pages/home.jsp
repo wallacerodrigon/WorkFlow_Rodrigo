@@ -8,32 +8,33 @@
 	</header>
 
 	<aside>
+		<a href="#" onClick="efetuarLogoff()"><img src="../_img/exit.png">&lt&lt Saída</img></a>	
+	
 		<nav id="menus">
-			
+			 
 				<ul>
 					<div class="item_menu">
-					<li><img src="../_img/menu_projetos.png" width="100%" id="menu_projetos"></li>
-					<li><a href="#" onClick="novoProjeto()"><img src="../_img/novo.png">Novo Projeto</img></a></li>
+					<li><img src="../_img/menu_projetos.png" width="100%" id="menu_projetos" oncontextmenu="mostrarContexto(this, 'novo_projeto'); return false;"></li>
 					</div>
 					<li class="item_menu">
 					<c:choose>
 						<c:when test="${not empty listaProjetos}">
-							<div id="projetos_cadastrados" style="height:370px; overflow:scroll; width:100%">
-								<ul class="filetree treeview-famfamfam" id="projetos">
+							<div id="projetos_cadastrados" style="height:450px; overflow:scroll; width:100%">
+								<ul class="filetree" id="projetos">
 								<c:forEach var="proj" items="${listaProjetos}">
-									<li><span class="folder" onclick="abrirTela('projeto', <c:out value="${proj.idProjeto}"/>)"><c:out value="${proj.nome}"/></span>
-							 		    <p><a href="javascript:void(0)" onclick="novoExperimento(<c:out value="${proj.idProjeto}"/>)"><img src="../_img/adiciona.png"> Adicionar Experimento </img></a></p>
+									<li><span class="folder"  oncontextmenu="mostrarContexto(this, 'novo_experimento<c:out value="${proj.idProjeto}"/>'); return false;" onclick="abrirTela('projeto', <c:out value="${proj.idProjeto}"/>)"><c:out value="${proj.nome}"/></span>
+							 		    <span class="menu_contexto" id="novo_experimento<c:out value="${proj.idProjeto}"/>"><a href="javascript:void(0)" onclick="novoExperimento(<c:out value="${proj.idProjeto}"/>)"><img src="../_img/adiciona.png"> Adicionar Experimento </img></a></span>
 									
 									<c:if test="${not empty proj.experimentos}">
 										<ul>
 											<c:forEach var="exp" items="${proj.experimentos}">
 												<li>
-													<span class="folder" onclick="abrirTela('experimento', <c:out value="${exp.idExperimento}"/>)">${exp.nome}</span>
-													<p><a href="javascript:void(0)" onclick="novaAtividade(<c:out value="${exp.idExperimento}"/>)"><img src="../_img/adiciona.png"> Adicionar Atividade </img></a></p>
+													<span class="folder" oncontextmenu="mostrarContexto(this, 'nova_atividade<c:out value="${exp.idExperimento}"/>'); return false;" onclick="abrirTela('experimento', <c:out value="${exp.idExperimento}"/>)">${exp.nome}</span>
+												 		<span class="menu_contexto" id="nova_atividade<c:out value="${exp.idExperimento}"/>"><a href="javascript:void(0)" onclick="novaAtividade(<c:out value="${exp.idExperimento}"/>)"><img src="../_img/adiciona.png">Adicionar Atividade </img></a></span>
 													<c:if test="${not empty exp.atividades}">
 													<ul>
 													<c:forEach var="ativ" items="${exp.atividades}">
-														<li><span class="file"  onclick="abrirTela('atividade', <c:out value="${ativ.idAtividade}"/>)">${ativ.nomeAtividade}</span></li>
+														<li><span class="file" oncontextmenu="mostrarContexto(this, 'nova_atividade2'); return false;" onclick="abrirTela('atividade', <c:out value="${ativ.idAtividade}"/>)">${ativ.nomeAtividade}</span></li>
 													</c:forEach>
 													</ul>
 													</c:if>
@@ -45,15 +46,15 @@
 								</ul>
 							</div>
 						</c:when>
-<%-- 						
+						
 						<c:otherwise>
-							<span>Nenhum projeto cadastrado</span>
-						</c:otherwise> --%>
+							<h1>Nenhum projeto cadastrado</h1>
+						</c:otherwise>
 					</c:choose>
 					</li>
-					<div class="item_menu">
+					<div class="menu_contexto">
 						<li><img src="../_img/menu_sistemas.png" width="100%"></li>
-						<li><a href="#" onClick="efetuarLogoff()"><img src="../_img/exit.png">Sair</img></a></li>
+
 					</div>
 	 			</ul>
 		</nav>
@@ -63,9 +64,11 @@
 		<article id="exibicao_conteudo" >
 			<img src="../_img/logo_inicial.png" alt="Logo do sistema" id="img_home"/>
 		</article>	
-		
-		
 	</section>
+	
 </div>
+
+<span class="menu_contexto" id="novo_projeto"><a href="#" onClick="novoProjeto()"><img src="../_img/adiciona.png">Novo Projeto</img></a></span>
+
 </body>
 </html>

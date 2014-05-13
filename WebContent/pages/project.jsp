@@ -17,7 +17,7 @@
 
 <div id="formCadProjeto">
 	<form id="frmManter">
-		<fieldset>
+		<fieldset class="cadastros">
 			<legend>Manuten&ccedil;&atilde;o de Projetos</legend>
 			<div class="rotulo">Nome:</div>
 			<input type="text" id="txtNome" name="nome" maxlength="50" size="100" value="${projeto.nome}"><br>				

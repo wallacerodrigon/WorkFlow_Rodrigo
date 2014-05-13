@@ -16,7 +16,7 @@
 <body>
 <div id="formCadAtividade" title="">
 	<form id="frmManterAtividade">
-		<fieldset>
+		<fieldset class="cadastros">
 				<legend>Manuten&ccedil;&atilde;o de atividades</legend>
 				<div  class="rotulo">Nome da Atividade:</div>
 				<input type=text id="txtNome" name="nomeAtividade" maxlength="50" style="width:500px"  value="${atividade.nomeAtividade}">
@@ -45,9 +45,7 @@
 				<br>
 				
 				<div class="rotulo">Linha de comando:</div>
-				<textarea id="txtComando" name="linhaComando" rows="5" maxlength="100" style="width: 500px">
-				 ${atividade.linhaComando}
-				</textarea>
+				<textarea id="txtComando" name="linhaComando" rows="5" maxlength="100" style="width: 500px">${atividade.linhaComando}</textarea>
 				<br>
 				
 				<div class="rotulo">Arquivo:</div>

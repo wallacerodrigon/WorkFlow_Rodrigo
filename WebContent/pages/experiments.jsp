@@ -19,7 +19,7 @@
 
 <div id="formCadExperimento">
 	<form id="frmManter">
-		<fieldset>
+		<fieldset class="cadastros">
 			<legend>Manuten&ccedil;&atilde;o de Experimentos</legend>
 				<div class="rotulo">Nome:</div>
 				<input type="text" id="txtNome" name="nomeExperimento" maxlength="50" size="100" value="${experimento.nome}"><br>				

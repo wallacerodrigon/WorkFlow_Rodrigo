@@ -76,7 +76,6 @@ section#corpo {
 	height: 550px;
 	margin-top: 0px;
 	margin-left: 2px;
-
 }
 
 section#corpo header {
@@ -151,5 +150,9 @@ a:hover {
 	font-family:Verdana, Arial, Helvetica, sans-serif;
 	border: 1px solid #999999;
 	vertical-align: middle;
+}
 
+.cadastros {
+	width: 70%;
+	margin-top: 20px;
 }

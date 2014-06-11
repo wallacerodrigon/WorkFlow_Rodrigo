@@ -1,0 +1,189 @@
+@CHARSET "ISO-8859-1";
+
+body {
+	width: 100%;
+	height:auto;
+	min-height: 100%;	
+}
+
+.form_dados {
+	width: 100%;
+}
+
+.form_dados tr td { 
+	border: none;
+	text-align: left;
+} 
+
+#corpo {
+	overflow:auto;
+	width: 100%;	
+}
+
+/* #rodape {
+	position: relative;
+	margin-top: -45px;
+	clear: both;
+	width: 100%;
+	height: 45px;
+	padding-top: 4px;
+
+}
+ */
+
+
+#experiments {
+	display: block;
+	float: left;
+	width: 49.5%;
+	height: 100%;
+	min-width: 500px;
+}
+
+#relations_attachments {
+	height: 100%;
+	display: block;
+	float: right;
+	width: 49.5%;
+	min-width: 500px;	
+} 
+
+#botoes {
+	padding-top: 5px;
+	display: block;
+	float: right;
+	width: 100%;
+	height: 100%;
+	border: 1px solid #666;
+}
+
+.rotulo_formulario {
+	font-style: normal;
+	font-weight: bold;
+	width: 100px;
+	text-align: left;
+	padding: 1px;
+	
+}
+
+.parte_interna {
+	width: 100%;
+	padding: 1.5px;
+}
+
+#tbl_itens_experimentos {
+	height: 253px;
+	width: 100%;
+}
+
+#tbl_itens_experimentos tr td {
+	border: none;
+	border-solid: 0;
+}
+
+.parte_interna .itens_experimento {
+	height: 100%;
+}
+
+
+.legenda {
+	font-style: normal;
+	font-weight: bold;
+}
+
+.botao {
+	float:right;
+ 	margin-right:10px;
+	padding:5px;
+	cursor:pointer;	
+}
+
+div textarea {
+	width: 100%;	
+}
+
+#relations {
+	height: 280px;
+}
+
+#attachments { 
+	height: 200px;
+}
+
+.tabela_relation {
+	width: 100%;
+}
+
+.tabela_relation tr td {
+	border: none;
+	text-align: left; 
+	
+}
+
+#abaAcesso{
+	border: 2px solid #dddddd;
+	width: 100%;	
+	height: 220px;
+	clear: both;	
+}
+.abaAtiva{
+	float: left; width: 130px; padding: 5px;
+	font-size: 12px;
+	font-weight: bold;
+	background-color: #0000ff; 
+	cursor: pointer;
+	color: #fff;
+	border-bottom: 2px solid #0000ff;
+}
+.abaInativa{
+	float: left; width: 130px; padding: 5px;
+	font-size: 12px;
+	font-weight: bold;
+	color: #999;
+	background-color: #F0F0F0;
+	cursor: pointer;
+	border-bottom: 2px solid #0000ff;		
+}
+
+#botoes_relations {
+	margin-top: 8px;
+}
+
+.lista {
+	width: 100%;
+	height: 80%;
+
+}
+
+.div_overflow {
+	overflow: auto; 
+	height: 175px;
+	width: 100%;	
+}
+
+.div_overflow2 {
+	border: 1px solid #666;
+	overflow: auto; 
+	height: 160px;	
+	width: 99%;
+}
+
+
+.linha_par
+{
+	background-color:#EFF1F1;
+}
+.linha_impar
+{
+	background-color:#F8F8F8;
+}
+.mouse_over
+{
+	background-color: #E1E1E1;
+}
+.mouse_click
+{
+	background-color: #1B69BB;
+	color:#FFF;
+}
+

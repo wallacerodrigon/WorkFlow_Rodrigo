@@ -28,8 +28,6 @@ import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 
-import com.thoughtworks.xstream.XStream;
-
 import dao.BioInformaticaDaoIf;
 import dao.impl.AtividadeDao;
 import entidades.Atividade;
@@ -305,7 +303,7 @@ public class ActivityServlet extends HttpServlet {
 		}
 		
 		//montar retorno da lista com xml
-		response.getWriter().write(this.montarXml(listaRetorno));
+		//response.getWriter().write(this.montarXml(listaRetorno));
 	}
 	
 	private Atividade buscarAtividade(Integer idAtividade) throws IOException {
@@ -316,20 +314,6 @@ public class ActivityServlet extends HttpServlet {
 		}
 		return null;
 	}	
-
-	private String montarXml(List<Atividade> listaAtividade) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-		
-		XStream x = new XStream();
-		x.alias(NOME_LISTA_ATIVIDADES, List.class);
-		x.alias("atividade", Atividade.class);
-		builder.append(x.toXML(listaAtividade));
-		
-
-		
-		return builder.toString();
-	}
 
 }
 

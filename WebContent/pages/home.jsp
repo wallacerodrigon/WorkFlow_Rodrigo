@@ -15,6 +15,7 @@
 				<ul>
 					<div class="item_menu">
 					<li><img src="../_img/menu_projetos.png" width="100%" id="menu_projetos" oncontextmenu="mostrarContexto(this, 'novo_projeto'); return false;"></li>
+						<span class="menu_contexto" id="novo_projeto"><a href="#" onClick="novoProjeto()"><img src="../_img/adiciona.png">Novo Projeto</img></a></span>					
 					</div>
 					<li class="item_menu">
 					<c:choose>
@@ -23,14 +24,21 @@
 								<ul class="filetree" id="projetos">
 								<c:forEach var="proj" items="${listaProjetos}">
 									<li><span class="folder"  oncontextmenu="mostrarContexto(this, 'novo_experimento<c:out value="${proj.idProjeto}"/>'); return false;" onclick="abrirTela('projeto', <c:out value="${proj.idProjeto}"/>)"><c:out value="${proj.nome}"/></span>
-							 		    <span class="menu_contexto" id="novo_experimento<c:out value="${proj.idProjeto}"/>"><a href="javascript:void(0)" onclick="novoExperimento(<c:out value="${proj.idProjeto}"/>)"><img src="../_img/adiciona.png"> Adicionar Experimento </img></a></span>
+							 		    <span class="menu_contexto" id="novo_experimento<c:out value="${proj.idProjeto}"/>">
+						 		    		<a href="javascript:void(0)" onclick="novoExperimento(<c:out value="${proj.idProjeto}"/>)"><img src="../_img/adiciona.png"> Adicionar Experimento </img></a>
+							 		    </span>
 									
 									<c:if test="${not empty proj.experimentos}">
 										<ul>
 											<c:forEach var="exp" items="${proj.experimentos}">
 												<li>
 													<span class="folder" oncontextmenu="mostrarContexto(this, 'nova_atividade<c:out value="${exp.idExperimento}"/>'); return false;" onclick="abrirTela('experimento', <c:out value="${exp.idExperimento}"/>)">${exp.nome}</span>
-												 		<span class="menu_contexto" id="nova_atividade<c:out value="${exp.idExperimento}"/>"><a href="javascript:void(0)" onclick="novaAtividade(<c:out value="${exp.idExperimento}"/>)"><img src="../_img/adiciona.png">Adicionar Atividade </img></a></span>
+											 		<span class="menu_contexto" id="nova_atividade<c:out value="${exp.idExperimento}"/>">
+											 			<ul>
+											 				<li><a href="javascript:void(0)" onclick="novaAtividade(<c:out value="${exp.idExperimento}"/>)"><img src="../_img/adiciona.png">Adicionar Atividade </img></a></li>
+											 				<li><a href="javascript:void(0)" onclick="visualizarExperimento(<c:out value="${exp.idExperimento}"/>)"><img src="../_img/eye.png">Visualizar Experimento</img></a></li>
+											 			</ul>
+											 		</span>
 													<c:if test="${not empty exp.atividades}">
 													<ul>
 													<c:forEach var="ativ" items="${exp.atividades}">
@@ -68,7 +76,15 @@
 	
 </div>
 
-<span class="menu_contexto" id="novo_projeto"><a href="#" onClick="novoProjeto()"><img src="../_img/adiciona.png">Novo Projeto</img></a></span>
+
+
+<!-- POPUP DE DETALHES -->
+<div id="users-contain" class="ui-widget">
+	<div id="telaPopup">
+		<form id="frmPopup">
+    	</form>
+	</div>
+</div>
 
 </body>
 </html>

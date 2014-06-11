@@ -1,7 +1,23 @@
 $(document).ready(function(){
 
 	$("#projetos").treeview();
-	
+
+	$("#telaPopup").dialog({
+    	autoOpen: false,
+    	title: 'Procedimento',
+    	height: 560,
+		width: 1230,
+    	modal: true,
+    	buttons: {
+    		'Fechar': function() {
+    			$(this).dialog('close');
+    		},
+    		'Gerar Grafo': function() {
+    			gerarGrafo();
+    		}
+    	}
+	});	
+		
 	
 }); 
 
@@ -22,7 +38,7 @@ function abrirTela(nome, id){
 		paramsServlet = "idAtividade="+id;
 		nome = "activity.jsp";
 	} else {
-		$.prompt("Página inválida!");
+		$.prompt("Pï¿½gina invï¿½lida!");
 		return;
 	}
 	
@@ -49,6 +65,25 @@ function novaAtividade(idExperimento){
 	fecharTodosMenus();
 }
 
+function visualizarExperimento(idExperimento){
+	$.ajax({
+		url:"../experiment.do?acao=consultar&idExperimento="+idExperimento,
+		dataType:'html',
+		type:'POST',
+		success: function( data ){
+			if (data == "sucesso"){
+				$("#frmPopup").load("experiments_relationship.jsp");
+				$("#telaPopup").dialog('open');
+			} else {
+				$.prompt("Erro ao efetuar acao para a tela:" + pNomeTelaAbrir);
+			}
+		},
+		error: function( xhr, er ){
+			$.prompt('Os dados n&atilde;o for&atilde;o enviados. Motivo: ' + xhr.status + ', ' + xhr.statusText + ' | ' + er);
+		}
+	});		
+	fecharTodosMenus();
+}
 
 function enviar(pUrl, pNomeTelaAbrir, pAbreNoFrame, pIdTela ){
 	$.ajax({
@@ -80,11 +115,11 @@ function fecharTodosMenus(){
 }
 
 function mostrarContexto(pElemOrigem, pIdMenu){
-	//pegar a posição do clique
+	//pegar a posiï¿½ï¿½o do clique
 	fecharTodosMenus();
 	var menu = document.getElementById(pIdMenu);
 	var posicaoElemento = getPosicaoElemento(pElemOrigem.id);
-	var largura = (pElemOrigem.width != null)? pElemOrigem.width : 50;
+	var largura = (pElemOrigem.width != null)? pElemOrigem.width: 50;
 	
 	var left = posicaoElemento.left + (largura/2);
 	var top = posicaoElemento.top + (pElemOrigem.height/2);
@@ -119,3 +154,6 @@ function getPosicaoElemento(elemID){
     }
     return {left:offsetLeft, top:offsetTop};
 }
+
+
+function gerarGrafo(){}

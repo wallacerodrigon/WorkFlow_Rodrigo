@@ -8,8 +8,9 @@
 			 	<td><input type="file" id="txtArquivo" name="arquivo"></td>
 		     </tr>
 		     <tr>
-		     	<td><input type="submit" id="btnEnviar" value="Iniciar Upload"></td>
+		     	<td><input type="submit" id="btnEnviar" value="Subir arquivo"></td>
 		     </tr>
 		</table>
 	</form>
 </body>
+

@@ -70,7 +70,7 @@
 					<div class="rotulo">Nome</div>
 					<input type="text" name="nome" id="nomeCadastro" maxlength="50" class="inputs" required/> 
 					
-					<div class="rotulo">Usu&aacute;rio</div>
+					<div class="rotulo">Usu&aacute;rio do sistema:</div>
 					<input type="text" name="login" id="loginCadastro" maxlength="50" class="inputs" required/>
 					
 					<div class="rotulo">Senha</div>
